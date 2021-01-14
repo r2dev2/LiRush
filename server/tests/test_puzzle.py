@@ -23,5 +23,20 @@ def test_from_csv_line():
 
 
 def test_from_csv():
-    puzzles = PuzzleList()
+    if "puzzles" not in globals():
+        globals()["puzzles"] = PuzzleList()
     assert all(f.rating <= s.rating for f, s in zip(puzzles, puzzles[1:]))
+
+
+def test_bin_search():
+    if "puzzles" not in globals():
+        globals()["puzzles"] = PuzzleList()
+
+    regular_use = puzzles.within_rating_range(1600, 1800)
+    assert all(1600 <= f.rating <= 1800 for f in regular_use)
+
+    below600 = puzzles.within_rating_range(0, 500)
+    assert all(0 <= f.rating <= 500 for f in below600)
+
+    above3500 = puzzles.within_rating_range(3500, 5000)
+    assert all(3500 <= f.rating <= 5000 for f in above3500)

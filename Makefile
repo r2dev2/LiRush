@@ -1,13 +1,18 @@
 py = python3
+pip = ${py} -m pip
 
 all: puzzles
 
 puzzles: data/lichess_db_puzzle.csv
 
-test:
+pyrequirements:
+	cat requirements.txt | grep "#" | sed 's/# //g' | $(py) || $(pip) install -r requirements.txt
+
+test: pyrequirements
+	$(py) -m mypy .
 	$(py) -m pytest server/tests
 
-format:
+format: pyrequirements
 	$(py) -m black server
 	$(py) -m isort server
 
