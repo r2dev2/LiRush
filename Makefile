@@ -9,6 +9,7 @@ test:
 
 format:
 	$(py) -m black server
+	$(py) -m isort server
 
 data/lichess_db_puzzle.csv:
 	curl -o lichess_db_puzzle.csv.bz2 https://database.lichess.org/lichess_db_puzzle.csv.bz2

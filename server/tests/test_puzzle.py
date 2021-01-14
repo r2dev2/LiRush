@@ -1,5 +1,6 @@
 from server.puzzle import Puzzle, PuzzleList
 
+
 def test_from_csv_line():
     lines = [
         "0000D,5rk1/1p3ppp/pq3b2/8/8/1P1Q1N2/P4PPP/3R2K1 w - - 2 27,d3d6 f8d8 d6d8 f6d8,1426,500,2,0,advantage endgame short,https://lichess.org/F8M8OS71#53",
@@ -7,9 +8,19 @@ def test_from_csv_line():
         "00206,r3kb1r/pppqpn1p/5p2/3p1bpQ/2PP4/4P1B1/PP3PPP/RN2KB1R w KQkq - 1 11,b1c3 f5g4 h5g4 d7g4,1236,500,-5,0,advantage opening short trappedPiece,https://lichess.org/MbJRo6PT#21",
     ]
     correct = [
-        Puzzle("5rk1/1p3ppp/pq3b2/8/8/1P1Q1N2/P4PPP/3R2K1 w - - 2 27", ["d3d6", "f8d8", "d6d8", "f6d8"], 1426, 500, 2, 0, ["advantage", "endgame", "short"], "https://lichess.org/F8M8OS71#53")
+        Puzzle(
+            "5rk1/1p3ppp/pq3b2/8/8/1P1Q1N2/P4PPP/3R2K1 w - - 2 27",
+            ["d3d6", "f8d8", "d6d8", "f6d8"],
+            1426,
+            500,
+            2,
+            0,
+            ["advantage", "endgame", "short"],
+            "https://lichess.org/F8M8OS71#53",
+        )
     ]
     assert all(p == c for p, c in zip(map(Puzzle.from_csv_line, lines), correct))
+
 
 def test_from_csv():
     puzzles = PuzzleList()

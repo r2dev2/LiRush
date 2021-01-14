@@ -2,8 +2,6 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-import chess
-
 
 @dataclass(order=True)
 class Puzzle:
@@ -49,7 +47,7 @@ class PuzzleList(List[Puzzle]):
     def __init__(self, fp: Optional[Path] = None):
         if fp is None:
             fp = Path("./data/lichess_db_puzzle.csv")
-        with open(fp, 'r') as fin:
+        with open(fp, "r") as fin:
             super().__init__(map(Puzzle.from_csv_line, fin))
         self.sort()
 
