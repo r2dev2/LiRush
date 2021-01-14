@@ -1,6 +1,14 @@
+py = python3
+
 all: puzzles
 
 puzzles: data/lichess_db_puzzle.csv
+
+test:
+	$(py) -m pytest server/tests
+
+format:
+	$(py) -m black server
 
 data/lichess_db_puzzle.csv:
 	curl -o lichess_db_puzzle.csv.bz2 https://database.lichess.org/lichess_db_puzzle.csv.bz2
