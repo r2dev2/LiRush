@@ -40,3 +40,7 @@ def test_bin_search():
 
     above3500 = puzzles.within_rating_range(3500, 5000)
     assert all(3500 <= f.rating <= 5000 for f in above3500)
+
+    low_rated = puzzles.within_rating_range(600, 800)
+    lower_rated = puzzles.within_rating_range(600, 700)
+    assert len(low_rated) >= len(lower_rated)
