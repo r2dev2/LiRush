@@ -2,16 +2,18 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+from server.wrappers import add_slots
 
+
+@add_slots
 @dataclass(order=True)
 class Puzzle:
     fen: str
-    moves: List[str]
+    moves: str
     rating: int
     rating_deviation: int
-    popularity: int
     nbplays: int
-    themes: List[str]
+    themes: str
     game_url: str
 
     @staticmethod
@@ -26,30 +28,35 @@ class Puzzle:
             moves,
             rating,
             rating_deviation,
-            popularity,
+            _popularity,
             plays,
             themes,
             gameurl,
         ) = line.strip().split(",")
         return cls(
             fen,
-            moves.split(" "),
+            moves,
             int(rating),
             int(rating_deviation),
-            int(popularity),
             int(plays),
-            themes.split(" "),
-            gameurl,
+            themes,
+            gameurl[20:],
         )
 
 
 class PuzzleList(List[Puzzle]):
+    cache: Dict[Path, List[Puzzle]] = dict()
+
     def __init__(self, fp: Optional[Path] = None):
         if fp is None:
             fp = Path("./data/lichess_db_puzzle.csv")
-        with open(fp, "r") as fin:
-            super().__init__(map(Puzzle.from_csv_line, fin))
-        self.sort()
+        try:
+            self[:] = self.cache[fp][:]
+        except KeyError:
+            with open(fp, "r") as fin:
+                super().__init__(map(Puzzle.from_csv_line, fin))
+            self.sort()
+            self.cache[fp] = self
         self.first: Dict[int, int] = dict()
         self.second: Dict[int, int] = dict()
         for i, p in enumerate(self):

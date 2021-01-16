@@ -10,13 +10,12 @@ def test_from_csv_line():
     correct = [
         Puzzle(
             "5rk1/1p3ppp/pq3b2/8/8/1P1Q1N2/P4PPP/3R2K1 w - - 2 27",
-            ["d3d6", "f8d8", "d6d8", "f6d8"],
+            "d3d6 f8d8 d6d8 f6d8",
             1426,
             500,
-            2,
             0,
-            ["advantage", "endgame", "short"],
-            "https://lichess.org/F8M8OS71#53",
+            "advantage endgame short",
+            "F8M8OS71#53",
         )
     ]
     assert all(p == c for p, c in zip(map(Puzzle.from_csv_line, lines), correct))
