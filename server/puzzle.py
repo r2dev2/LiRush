@@ -43,6 +43,9 @@ class Puzzle:
             gameurl[20:],
         )
 
+    def to_dict(self):
+        return {k: getattr(self, k) for k in self.__slots__}
+
 
 class PuzzleList(List[Puzzle]):
     cache: Dict[Path, List[Puzzle]] = dict()
