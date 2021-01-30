@@ -1,7 +1,7 @@
 <script>
         import Board from './Board.svelte';
 	export let name;
-        let server = "http://192.168.197.68:8000"
+        let server = "";
         async function getPuzzle() {
           let r = await fetch(`${server}/puzzles?start=1000&end=1200&pmax=1`, {mode: "cors"});
           let j = await r.json().then(j => j[0]);

@@ -1,7 +1,7 @@
 py = python3
 pip = ${py} -m pip
 
-all: puzzles
+all: puzzles client
 
 puzzles: data/lichess_db_puzzle.csv
 
@@ -15,6 +15,15 @@ test: pyrequirements
 format: pyrequirements
 	$(py) -m black server
 	$(py) -m isort server
+
+client/node_modules: client/package.json
+	cd client && npm i
+
+client/public/build/.built: client/node_modules client/src/*
+	cd client && npm run build
+	@touch client/public/build/.built
+
+client: client/public/build/.built
 
 data/lichess_db_puzzle.csv:
 	curl -o lichess_db_puzzle.csv.bz2 https://database.lichess.org/lichess_db_puzzle.csv.bz2
