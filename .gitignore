@@ -1,3 +1,8 @@
 data/
 *.swp
 __pycache__/
+node_modules/
+build/
+.DS_Store
+setupTypeScript.js
+*.bak
