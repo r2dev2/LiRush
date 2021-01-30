@@ -1,19 +1,19 @@
 import random
+from pathlib import Path
 from typing import List, Optional
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 import server.puzzle as puzzle
 
+public = Path(__file__).resolve().parent / "../client/public"
+
 app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.mount("/public", StaticFiles(directory=f"{public}"), name="pub")
+
 puzzledb = puzzle.PuzzleList()
 
 
@@ -24,7 +24,6 @@ async def puzzles(start: int, end: int, pmax: Optional[int]):
         return [i.to_dict() for i in inside_range]
     return [i.to_dict() for i in random.sample(inside_range, pmax)]
 
-
-@app.get("/")
+@app.get("/play/")
 async def root():
-    return {"message": "Hello World"}
+    return FileResponse(f"{public / 'index.html'}")

@@ -3,7 +3,7 @@
 	export let name;
         let server = "";
         async function getPuzzle() {
-          let r = await fetch(`${server}/puzzles?start=1000&end=1200&pmax=1`, {mode: "cors"});
+          let r = await fetch(`${server}/puzzles?start=1000&end=1200&pmax=1`);
           let j = await r.json().then(j => j[0]);
           j.moves = j.moves.split(' ');
           return j;
