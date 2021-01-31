@@ -8,6 +8,10 @@
           j.moves = j.moves.split(' ');
           return j;
         }
+
+        addEventListener('puzzle', e => {
+          console.log(e.detail);
+        });
 </script>
 
 <main>

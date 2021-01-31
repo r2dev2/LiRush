@@ -6,17 +6,51 @@
   const rows = [...Array(8).keys()];
   const columns = [...rows]; 
   let board = new CBoard(fen);
-  if (moves[0])
+  let moveNumber = 0;
+  if (moves[0]) {
     board = board.move_uci(moves[0]);
+    moveNumber++;
+  }
   let flipped = !board.turn;
 
   function flipBoard() {
     flipped = !flipped;
   }
 
+  function hasNextMove() {
+    return moveNumber + 1 < moves.length;
+  }
+
+  function nextMove() {
+    board = board
+      .move_uci(moves[moveNumber])
+      .move_uci(moves[moveNumber + 1]);
+    moveNumber += 2;
+  }
+
+  function nextPuzzle(wasSuccess) {
+    const detail = {
+      success: wasSuccess
+    };
+    dispatchEvent(new CustomEvent('puzzle', { detail }));
+  }
+
   addEventListener('move', e => {
     if (board.validate(e.detail)) {
-      board = board.move(e.detail);
+      const newBoard = board.move(e.detail);
+      if (moveNumber < moves.length
+        && board.move_uci(moves[moveNumber]).fen === newBoard.fen) {
+        if (hasNextMove())
+          nextMove();
+        else
+        {
+          nextPuzzle(true);
+          board = newBoard;
+        }
+      } else {
+        nextPuzzle(false);
+        board = newBoard;
+      }
     }
   });
 </script>
