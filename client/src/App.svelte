@@ -2,24 +2,45 @@
         import Board from './Board.svelte';
 	export let name;
         let server = "";
-        async function getPuzzle() {
-          let r = await fetch(`${server}/puzzles?start=1000&end=1200&pmax=1`);
-          let j = await r.json().then(j => j[0]);
+        let minPuzzle = 700;
+        let maxPuzzle = 800;
+        let count = 0;
+        let wrong = 0;
+        async function getPuzzle(minPuzzle, maxPuzzle) {
+          const r = await fetch(
+            `${server}/puzzles?start=${minPuzzle}&end=${maxPuzzle}&pmax=1`
+          );
+          const j = await r.json().then(j => j[0]);
           j.moves = j.moves.split(' ');
           return j;
         }
 
         addEventListener('puzzle', e => {
-          console.log(e.detail);
+          const { success } = e.detail;
+          if (success) {
+            minPuzzle += 50;
+            maxPuzzle += 50;
+            count++;
+          } else {
+            minPuzzle += 25;
+            maxPuzzle += 25;
+            wrong++;
+          }
+          console.log(`Solved ${count} puzzles, ${wrong} wrong`);
         });
 </script>
 
 <main>
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-        {#await getPuzzle() then { fen, moves }}
-          <Board {fen} {moves} />
-        {/await}
+        {#if wrong < 3}
+          {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
+            <Board {fen} {moves} />
+          {/await}
+          <span>{count} correct and {wrong} incorrect</span>
+        {:else}
+          <h1>You solved {count} correct.</h1>
+        {/if}
 </main>
 
 <style>
