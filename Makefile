@@ -20,7 +20,7 @@ client/node_modules: client/package.json
 	cd client && npm i
 
 client/public/build/.built: client/node_modules client/src/*
-	cd client && npm run build
+	cd client && DEV=1 npm run build
 	@touch client/public/build/.built
 
 client: client/public/build/.built
