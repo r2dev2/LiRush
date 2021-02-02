@@ -1,6 +1,6 @@
 const WHITE = 1;
 const BLACK = 0;
-const imgroot = 'https://raw.githubusercontent.com/r2dev2/WayChess/master/img/';
+const imgroot = "/public/extimg/";
 
 export class CPiece {
   constructor(fenValue) {

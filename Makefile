@@ -23,7 +23,10 @@ client/public/build/.built: client/node_modules client/src/*
 	cd client && DEV=1 npm run build
 	@touch client/public/build/.built
 
-client: client/public/build/.built
+client: client/public/build/.built extimg
+
+extimg:
+	@make -C client/public/extimg -j8
 
 data/lichess_db_puzzle.csv:
 	curl -o lichess_db_puzzle.csv.bz2 https://database.lichess.org/lichess_db_puzzle.csv.bz2

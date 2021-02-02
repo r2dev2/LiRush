@@ -74,7 +74,7 @@
 }
 
 .board {
-  background-image: url("https://lichess1.org/assets/_4hHVpp/images/board/svg/brown.svg");
+  background-image: url("/public/extimg/board.svg");
   background-size: contain;
   width: calc(8*var(--square-width));
   height: calc(8*var(--square-width));
