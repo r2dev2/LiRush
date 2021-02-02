@@ -6,9 +6,10 @@
   export let flipped = false;
 
   let moving = false;
+  let squareWidth = 5.5;
 
   function flip(c) {
-    return 3.5 * 8 - c;
+    return squareWidth * 8 - c;
   }
 
   function translateStyle(x, y) {
@@ -43,8 +44,8 @@
   const boardY = () => parent().getBoundingClientRect().top;
   $: dragx = 0 * flipped;
   $: dragy = 0 * flipped;
-  $: ogRank = (flipped ? rank : 7 - rank) * 3.5;
-  $: ogFile = (flipped ? 7 - file : file) * 3.5;
+  $: ogRank = (flipped ? rank : 7 - rank) * squareWidth;
+  $: ogFile = (flipped ? 7 - file : file) * squareWidth;
   $: dispRank = `calc(${ogRank}rem - ${dragy}px)`;
   $: dispFile = `calc(${ogFile}rem - ${dragx}px)`;
   $: style = translateStyle(dispFile, dispRank, moving) + backgroundStyle;
@@ -90,12 +91,12 @@
   }
 
   function getFile() {
-    const relativeFile = between(Math.ceil(pxToREM(pos3 - boardX()) / 3.5) - 1, 0, 7);
+    const relativeFile = between(Math.ceil(pxToREM(pos3 - boardX()) / squareWidth) - 1, 0, 7);
     return flipped ? 7 - relativeFile : relativeFile;
   }
 
   function getRank() {
-    const relativeRank = between(Math.ceil(pxToREM(pos4 - boardY()) / 3.5) - 1, 0, 7);
+    const relativeRank = between(Math.ceil(pxToREM(pos4 - boardY()) / squareWidth) - 1, 0, 7);
     return flipped ? relativeRank : 7 - relativeRank;
   }
 
@@ -125,6 +126,7 @@
 
 <style>
 .piece {
+  background-size: contain;
   width: var(--square-width);
   height: var(--square-width);
   z-index: 10;

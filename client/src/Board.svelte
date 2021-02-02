@@ -61,18 +61,21 @@
   {/each}
 </div>
 
+<!--
 <button on:click={flipBoard}>
   Flip board
 </button>
+-->
 
 
 <style>
 :root {
-  --square-width: 3.5rem;
+  --square-width: 5.5rem;
 }
 
 .board {
   background-image: url("https://lichess1.org/assets/_4hHVpp/images/board/svg/brown.svg");
+  background-size: contain;
   width: calc(8*var(--square-width));
   height: calc(8*var(--square-width));
 }

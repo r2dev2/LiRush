@@ -1,6 +1,5 @@
 <script>
         import Board from './Board.svelte';
-	export let name;
         let server = "";
         let minPuzzle = 700;
         let maxPuzzle = 800;
@@ -31,13 +30,22 @@
 </script>
 
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
         {#if wrong < 3}
-          {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
-            <Board {fen} {moves} />
-          {/await}
-          <span>{count} correct and {wrong} incorrect</span>
+          <div class="flex-container">
+            {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
+              <Board {fen} {moves} />
+            {/await}
+            <div class="correct-description">
+              <span class="correct">
+                {count}
+              </span>
+              correct and
+              <span class="incorrect">
+                {wrong}
+              </span>
+              incorrect
+            </div>
+          </div>
         {:else}
           <h1>You solved {count} correct.</h1>
         {/if}
@@ -57,6 +65,28 @@
 		font-size: 4em;
 		font-weight: 100;
 	}
+
+        .flex-container {
+          display: flex;
+          flex-direction: row;
+        }
+
+        .flex-container > * {
+          padding: 50px;
+          padding-top: 0px;
+        }
+
+        .correct {
+          color: green;
+        }
+
+        .incorrect {
+          color: red;
+        }
+
+        .correct-description {
+          font-size: 3em;
+        }
 
 	@media (min-width: 640px) {
 		main {
