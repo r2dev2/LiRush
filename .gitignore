@@ -6,4 +6,6 @@ build/
 .DS_Store
 setupTypeScript.js
 *.bak
-extimg/
+client/public/extimg/white/*.png
+client/public/extimg/black/*.png
+client/public/extimg/*.svg
