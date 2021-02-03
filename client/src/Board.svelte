@@ -12,6 +12,8 @@
     moveNumber++;
   }
   let flipped = !board.turn;
+  let hasEnded = false;
+  let wasCorrect = false;
 
   function flipBoard() {
     flipped = !flipped;
@@ -32,7 +34,9 @@
     const detail = {
       success: wasSuccess
     };
-    dispatchEvent(new CustomEvent('puzzle', { detail }));
+    hasEnded = true;
+    wasCorrect = wasSuccess;
+    setTimeout(() => dispatchEvent(new CustomEvent('puzzle', { detail })), 100);
   }
 
   addEventListener('move', e => {
@@ -55,11 +59,17 @@
   });
 </script>
 
-<div class="grid board">
-  {#each board.pieces as piece}
-    <Piece {...piece} {flipped} />
-  {/each}
-</div>
+{#if !hasEnded}
+  <div class="grid board">
+    {#each board.pieces as piece}
+      <Piece {...piece} {flipped} />
+    {/each}
+  </div>
+{:else if wasCorrect}
+  <div class="status correct" />
+{:else}
+  <div class="status incorrect" />
+{/if}
 
 <!--
 <button on:click={flipBoard}>
@@ -84,6 +94,21 @@
   display: grid;
   grid-template-columns: repeat(8, var(--square-width));
   grid-template-rows: repeat(8, var(--square-width));
+}
+
+.status {
+  width: calc(8*var(--square-width));
+  height: calc(8*var(--square-width));
+  transition: .1s ease-in-out;
+  opacity: .75;
+}
+
+.correct {
+  background-color: #36B039;
+}
+
+.incorrect {
+  background-color: #FF0000;
 }
 
 </style>
