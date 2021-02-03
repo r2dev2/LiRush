@@ -4,6 +4,7 @@ const imgroot = "/public/extimg/";
 
 export class CPiece {
   constructor(fenValue) {
+    this.fenValue = fenValue;
     this.name = {
       p: 'pawn',
       n: 'knight',

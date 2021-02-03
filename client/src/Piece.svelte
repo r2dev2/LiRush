@@ -2,14 +2,26 @@
   import { CPiece } from './piece.js';
   export let rank = 0;
   export let file = 0;
-  export let piece = null;
+  // export let piece = null;
+  export let pieceL = '';
   export let flipped = false;
+
+  $: piece = new CPiece(pieceL);
 
   let moving = false;
   let squareWidth = 5.5;
 
   function flip(c) {
     return squareWidth * 8 - c;
+  }
+
+  function initDrag(mouseX, mouseY) {
+    const newX = Math.ceil(mouseX - REMToPx(squareWidth));
+    const newY = Math.ceil(mouseY - REMToPx(squareWidth));
+    return {
+      dragx: REMToPx(ogFile) - newX - boardX(),
+      dragy: REMToPx(ogRank) - newY - boardY(),
+    };
   }
 
   function translateStyle(x, y) {
@@ -37,9 +49,8 @@
 
   const id = randID();
   $: src = piece.getImg();
-  $: className = `piece ${piece.getClass()}`;
-  $: backgroundStyle = `background-image: url(${src}); background-size: cover`;
-  let movingStyle = '';
+  $: className = `piece ${piece.getClass()}${moving ? ' moving' : ''}`;
+  $: backgroundStyle = `background-image: url(${src}); background-size: cover;`;
   const boardX = () => parent().getBoundingClientRect().left;
   const boardY = () => parent().getBoundingClientRect().top;
   $: dragx = 0 * flipped;
@@ -59,6 +70,10 @@
     pos4 = e.clientY;
     document.onmouseup = closeDragElement;
     document.onmousemove = elementDrag;
+    moving = true;
+    const newPositions = initDrag(e.clientX, e.clientY);
+    dragx = newPositions.dragx || dragx;
+    dragy = newPositions.dragy || dragy;
   }
 
   function elementDrag(e) {
@@ -77,6 +92,7 @@
     document.onmousemove = null;
     document.onmouseup = null;
     document.onmousemove = null;
+    moving = false;
     const move = getMove();
     dispatchEvent(new CustomEvent('move', { detail: move }));
     dragx = 0, dragy = 0;
@@ -90,13 +106,17 @@
     return px / parseFloat(fontSize());
   }
 
+  function REMToPx(rem) {
+    return parseFloat(fontSize()) * rem;
+  }
+
   function getFile() {
-    const relativeFile = between(Math.ceil(pxToREM(pos3 - boardX()) / squareWidth) - 1, 0, 7);
+    const relativeFile = Math.ceil(pxToREM(pos3 - boardX()) / squareWidth) - 1;
     return flipped ? 7 - relativeFile : relativeFile;
   }
 
   function getRank() {
-    const relativeRank = between(Math.ceil(pxToREM(pos4 - boardY()) / squareWidth) - 1, 0, 7);
+    const relativeRank = Math.ceil(pxToREM(pos4 - boardY()) / squareWidth) - 1;
     return flipped ? relativeRank : 7 - relativeRank;
   }
 
@@ -131,6 +151,11 @@
   height: var(--square-width);
   z-index: 10;
   position: absolute;
+  /*transition: .2s;*/
+}
+
+.moving {
+  transition: 0s;
 }
 
 .piece:hover {

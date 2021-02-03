@@ -14,7 +14,7 @@ export class CBoard {
           file += parseInt(s);
         } else if (s !== '8') {
           const piece = new CPiece(s);
-          pieces.push({ piece, rank: 7 - i, file });
+          pieces.push({ piece, rank: 7 - i, file, pieceL: s });
           file++;
         }
       })

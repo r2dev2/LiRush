@@ -14,6 +14,14 @@
           return j;
         }
 
+        function getPuzzzle(...args) {
+          return new Promise((res, rej) => {
+            setTimeout(() => {
+              getPuzzzle(...args).then(res).catch(rej);
+            }, 2000);
+          });
+        }
+
         addEventListener('puzzle', e => {
           const { success } = e.detail;
           if (success) {
@@ -32,9 +40,11 @@
 <main>
         {#if wrong < 3}
           <div class="flex-container">
-            {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
-              <Board {fen} {moves} />
-            {/await}
+            <div class="board-container">
+              {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
+                <Board {fen} {moves} />
+              {/await}
+            </div>
             <div class="correct-description">
               <span class="correct">
                 {count}
@@ -86,6 +96,15 @@
 
         .correct-description {
           font-size: 3em;
+        }
+
+        .board-container {
+          background-image: url("/public/extimg/board.svg");
+          background-size: contain;
+          padding-top: 0px;
+          padding-left: 0px;
+          width: calc(41rem - 2px);
+          height: calc(41rem - 2px);
         }
 
 	@media (min-width: 640px) {
