@@ -1,8 +1,11 @@
 <script>
+  import { onDestroy } from 'svelte';
   import { CBoard } from './board.js';
   import Piece from './Piece.svelte';
   export let fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   export let moves = [];
+  fen = 'rn1qkbnr/pP1bpppp/8/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 4';
+  moves = ['b8c6', 'b7a8q', 'd8c8'];
   const rows = [...Array(8).keys()];
   const columns = [...rows]; 
   let board = new CBoard(fen);
@@ -30,16 +33,25 @@
     moveNumber += 2;
   }
 
+  function isPromotion(move) {
+    const { rank } = move.to.rank;
+    return move.piece == 'p' && rank == 1 || move.piece == 'P' && rank == 8;
+  }
+
   function nextPuzzle(wasSuccess) {
     const detail = {
       success: wasSuccess
     };
     hasEnded = true;
     wasCorrect = wasSuccess;
-    setTimeout(() => dispatchEvent(new CustomEvent('puzzle', { detail })), 100);
+    console.log("next puzzle");
+    setTimeout(() => {
+      console.log("dispatching puzzle");
+      dispatchEvent(new CustomEvent('puzzle', { detail }))
+    }, 100);
   }
 
-  addEventListener('move', e => {
+  function onMove(e) {
     if (board.validate(e.detail)) {
       const newBoard = board.move(e.detail);
       if (moveNumber < moves.length
@@ -56,7 +68,11 @@
         board = newBoard;
       }
     }
-  });
+  }
+
+  addEventListener('move', onMove);
+  onDestroy(() => removeEventListener('move', onMove));
+
 </script>
 
 {#if !hasEnded}

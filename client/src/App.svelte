@@ -22,7 +22,7 @@
           });
         }
 
-        addEventListener('puzzle', e => {
+        function onPuzzle(e) {
           const { success } = e.detail;
           if (success) {
             minPuzzle += 50;
@@ -33,12 +33,14 @@
             maxPuzzle += 25;
             wrong++;
           }
-          console.log(`Solved ${count} puzzles, ${wrong} wrong`);
-        });
+        }
+
+        removeEventListener('puzzle', onPuzzle);
+        addEventListener('puzzle', onPuzzle);
 </script>
 
 <main>
-        {#if wrong < 3}
+        {#if wrong < 30}
           <div class="flex-container">
             <div class="board-container">
               {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
