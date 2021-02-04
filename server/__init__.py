@@ -8,8 +8,9 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import server.puzzle as puzzle
+import server.utils as utils
 
-public = Path(__file__).resolve().parent / "../client/public"
+public = utils.get_public()
 
 app = FastAPI()
 app.mount("/public", StaticFiles(directory=f"{public}"), name="pub")
@@ -23,6 +24,7 @@ async def puzzles(start: int, end: int, pmax: Optional[int]):
     if pmax is None or len(inside_range) <= pmax:
         return [i.to_dict() for i in inside_range]
     return [i.to_dict() for i in random.sample(inside_range, pmax)]
+
 
 @app.get("/play/")
 async def root():
