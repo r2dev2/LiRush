@@ -34,8 +34,8 @@
   }
 
   function isPromotion(move) {
-    const { rank } = move.to.rank;
-    return move.piece == 'p' && rank == 1 || move.piece == 'P' && rank == 8;
+    const { rank } = move.to;
+    return move.piece == 'p' && rank == 0 || move.piece == 'P' && rank == 7;
   }
 
   function nextPuzzle(wasSuccess) {
@@ -44,28 +44,28 @@
     };
     hasEnded = true;
     wasCorrect = wasSuccess;
-    console.log("next puzzle");
-    setTimeout(() => {
-      console.log("dispatching puzzle");
-      dispatchEvent(new CustomEvent('puzzle', { detail }))
-    }, 100);
+    setTimeout(() => dispatchEvent(new CustomEvent('puzzle', { detail })), 100);
   }
 
   function onMove(e) {
     if (board.validate(e.detail)) {
-      const newBoard = board.move(e.detail);
-      if (moveNumber < moves.length
-        && board.move_uci(moves[moveNumber]).fen === newBoard.fen) {
-        if (hasNextMove())
-          nextMove();
-        else
-        {
-          nextPuzzle(true);
+      if (isPromotion(e.detail) && !e.detail.promoPiece) {
+        console.log("Do promotion stuff");
+      } else {
+        const newBoard = board.move(e.detail);
+        if (moveNumber < moves.length
+          && board.move_uci(moves[moveNumber]).fen === newBoard.fen) {
+          if (hasNextMove())
+            nextMove();
+          else
+          {
+            nextPuzzle(true);
+            board = newBoard;
+          }
+        } else {
+          nextPuzzle(false);
           board = newBoard;
         }
-      } else {
-        nextPuzzle(false);
-        board = newBoard;
       }
     }
   }

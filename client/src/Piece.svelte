@@ -51,8 +51,8 @@
   $: src = piece.getImg();
   $: className = `piece ${piece.getClass()}${moving ? ' moving' : ''}`;
   $: backgroundStyle = `background-image: url(${src}); background-size: cover;`;
-  const boardX = () => parent().getBoundingClientRect().left;
-  const boardY = () => parent().getBoundingClientRect().top;
+  const boardX = () => parent().getBoundingClientRect().left + 2 * scrollX;
+  const boardY = () => parent().getBoundingClientRect().top + 2 * scrollY;
   $: dragx = 0 * flipped;
   $: dragy = 0 * flipped;
   $: ogRank = (flipped ? rank : 7 - rank) * squareWidth;
@@ -122,6 +122,7 @@
 
   function getMove() {
     return {
+      piece: pieceL,
       from: {
         file,
         rank,
