@@ -53,7 +53,6 @@
   function onMove(e) {
     if (board.validate(e.detail)) {
       if (isPromotion(e.detail) && !e.detail.promoPiece) {
-        console.log("Do promotion stuff");
         isPromoting = true;
         promoTarget = {
           ...e.detail.to,
@@ -61,7 +60,6 @@
           color: e.detail.piece == 'P'
         };
       } else {
-        console.log(e.detail);
         const newBoard = board.move(e.detail);
         if (moveNumber < moves.length
           && board.move_uci(moves[moveNumber]).fen === newBoard.fen) {
@@ -81,8 +79,14 @@
     }
   }
 
+  function onMainclick() {
+    isPromoting = false;
+  }
+
   addEventListener('move', onMove);
+  addEventListener('mainclick', onMainclick);
   onDestroy(() => removeEventListener('move', onMove));
+  onDestroy(() => removeEventListener('mainclick', onMainclick));
 
 </script>
 

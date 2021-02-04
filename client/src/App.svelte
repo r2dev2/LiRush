@@ -39,7 +39,7 @@
         addEventListener('puzzle', onPuzzle);
 </script>
 
-<main>
+<main on:click={() => window.dispatchEvent(new Event('mainclick'))}>
         {#if wrong < 30}
           <div class="flex-container">
             <div class="board-container">

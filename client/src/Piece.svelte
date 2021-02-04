@@ -21,8 +21,8 @@
     const newX = Math.ceil(mouseX - REMToPx(squareWidth));
     const newY = Math.ceil(mouseY - REMToPx(squareWidth));
     return {
-      dragx: REMToPx(ogFile) - newX - boardX(),
-      dragy: REMToPx(ogRank) - newY - boardY(),
+      dragx: REMToPx(ogFile) - newX - boardX() + 3,
+      dragy: REMToPx(ogRank) - newY - boardY() + 2,
     };
   }
 
@@ -168,11 +168,13 @@
   /*transition: .2s;*/
 }
 
-.moving {
-  transition: 0s;
-}
-
 .piece:hover {
   z-index: 15;
+  cursor: grab;
+}
+
+.piece.moving {
+  transition: 0s;
+  cursor: grabbing;
 }
 </style>

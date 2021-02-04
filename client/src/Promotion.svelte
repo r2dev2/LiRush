@@ -1,4 +1,5 @@
 <script>
+  import { onDestroy } from 'svelte';
   import { CPiece } from './piece.js';
 
   export let file = 0;
@@ -11,7 +12,19 @@
   $: rrank = rank;
 
   $: flipped = rank === 0
+  $: hide = {
+    file: move.from.file,
+    rank: move.from.rank,
+    hide: true
+  };
+
+  $: unHide = {
+    file: move.from.file,
+    rank: move.from.rank,
+    hide: false
+  };
   const pt = () => color ? 'QNRB' : 'qnrb';
+
   let renderTargets = [];
 
   function translate({ file, rank }) {
@@ -24,6 +37,7 @@
     const detail = {...move};
     detail.promoPiece = piece.toLowerCase();
     dispatchEvent(new CustomEvent('move', { detail }));
+    dispatchEvent(new CustomEvent('hide', { detail: unHide }));
   }
 
   function newRenderTargets(updateR) {
@@ -48,6 +62,10 @@
   }
 
   $: containerTrans = translate(renderTargets[0], file);
+  $: x = dispatchEvent(new CustomEvent('hide', { detail: hide }));
+  onDestroy(() => {
+    dispatchEvent(new CustomEvent('hide', { detail: unHide }));
+  });
 </script>
 
 <div class="container" style={containerTrans}>
@@ -74,5 +92,6 @@
   .promo-target:hover {
     background-color: purple;
     transition: .1s ease-in-out;
+    cursor: pointer;
   }
 </style>
