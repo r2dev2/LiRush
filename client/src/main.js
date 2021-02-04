@@ -6,3 +6,4 @@ const app = new App({
 });
 
 export default app;
+document.body.style.backgroundColor = "#151515";

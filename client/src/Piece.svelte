@@ -176,5 +176,6 @@
 .piece.moving {
   transition: 0s;
   cursor: grabbing;
+  z-index: 16;
 }
 </style>

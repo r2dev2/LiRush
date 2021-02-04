@@ -5,6 +5,8 @@
         let maxPuzzle = 800;
         let count = 0;
         let wrong = 0;
+        let hasStarted = false;
+
         async function getPuzzle(minPuzzle, maxPuzzle) {
           const r = await fetch(
             `${server}/puzzles?start=${minPuzzle}&end=${maxPuzzle}&pmax=1`
@@ -20,6 +22,14 @@
               getPuzzzle(...args).then(res).catch(rej);
             }, 2000);
           });
+        }
+
+        function start() {
+          minPuzzle = 700;
+          maxPuzzle = 800;
+          count = 0;
+          wrong = 0;
+          hasStarted = true;
         }
 
         function onPuzzle(e) {
@@ -40,27 +50,33 @@
 </script>
 
 <main on:click={() => window.dispatchEvent(new Event('mainclick'))}>
-        {#if wrong < 30}
-          <div class="flex-container">
-            <div class="board-container">
-              {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
-                <Board {fen} {moves} />
-              {/await}
-            </div>
-            <div class="correct-description">
-              <span class="correct">
-                {count}
-              </span>
-              correct and
-              <span class="incorrect">
-                {wrong}
-              </span>
-              incorrect
-            </div>
-          </div>
-        {:else}
-          <h1>You solved {count} correct.</h1>
-        {/if}
+  {#if hasStarted}
+    {#if wrong < 3}
+      <div class="flex-container">
+        <div class="board-container">
+          {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
+            <Board {fen} {moves} />
+          {/await}
+        </div>
+        <div class="correct-description">
+          <span class="correct">
+            {count}
+          </span>
+          correct and
+          <span class="incorrect">
+            {wrong}
+          </span>
+          incorrect
+        </div>
+      </div>
+    {:else}
+      <h1>{count}</h1>
+      <button on:click={start}>Start new rush</button>
+    {/if}
+  {:else}
+    <h1>LiRush</h1>
+    <button on:click={start}>Start rush</button>
+  {/if}
 </main>
 
 <style>
@@ -71,12 +87,25 @@
 		margin: 0 auto;
 	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
+        h1 {
+          color: #ff3e00;
+          font-size: 4em;
+          font-weight: 100;
+        }
+
+        button {
+          background-color: #252525;
+          border-color: #151515;
+          color: #E5E5E5;
+          font-size: 1.2em;
+          font-weight: 50;
+          transition: .2s ease-in-out;
+        }
+
+        button:hover {
+          cursor: pointer;
+          transform: scale(1.05);
+        }
 
         .flex-container {
           display: flex;
@@ -98,6 +127,7 @@
 
         .correct-description {
           font-size: 3em;
+          color: #D5D5D5;
         }
 
         .board-container {

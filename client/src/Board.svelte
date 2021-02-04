@@ -5,8 +5,6 @@
   import Promotion from './Promotion.svelte';
   export let fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   export let moves = [];
-  fen = 'rn1qkbnr/pP1bpppp/8/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 4';
-  moves = ['b8c6', 'b7a8n', 'd8c8', 'a8c7'];
   const rows = [...Array(8).keys()];
   const columns = [...rows]; 
   let board = new CBoard(fen);
