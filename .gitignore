@@ -9,3 +9,4 @@ setupTypeScript.js
 client/public/extimg/white/*.png
 client/public/extimg/black/*.png
 client/public/extimg/*.svg
+dist/

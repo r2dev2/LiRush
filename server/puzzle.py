@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from server.wrappers import add_slots
+from server.utils import get_puzzle_csv
 
 
 @add_slots
@@ -52,7 +53,7 @@ class PuzzleList(List[Puzzle]):
 
     def __init__(self, fp: Optional[Path] = None):
         if fp is None:
-            fp = Path("./data/lichess_db_puzzle.csv")
+            fp = get_puzzle_csv()
         try:
             self[:] = self.cache[fp][:]
         except KeyError:
