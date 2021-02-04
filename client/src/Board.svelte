@@ -2,10 +2,11 @@
   import { onDestroy } from 'svelte';
   import { CBoard } from './board.js';
   import Piece from './Piece.svelte';
+  import Promotion from './Promotion.svelte';
   export let fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   export let moves = [];
   fen = 'rn1qkbnr/pP1bpppp/8/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 4';
-  moves = ['b8c6', 'b7a8q', 'd8c8'];
+  moves = ['b8c6', 'b7a8n', 'd8c8', 'a8c7'];
   const rows = [...Array(8).keys()];
   const columns = [...rows]; 
   let board = new CBoard(fen);
@@ -17,6 +18,8 @@
   let flipped = !board.turn;
   let hasEnded = false;
   let wasCorrect = false;
+  let isPromoting = false;
+  let promoTarget = { rank: 0, file: 0, color: true };
 
   function flipBoard() {
     flipped = !flipped;
@@ -40,7 +43,7 @@
 
   function nextPuzzle(wasSuccess) {
     const detail = {
-      success: wasSuccess
+      success: wasSuccess,
     };
     hasEnded = true;
     wasCorrect = wasSuccess;
@@ -51,7 +54,14 @@
     if (board.validate(e.detail)) {
       if (isPromotion(e.detail) && !e.detail.promoPiece) {
         console.log("Do promotion stuff");
+        isPromoting = true;
+        promoTarget = {
+          ...e.detail.to,
+          move: e.detail,
+          color: e.detail.piece == 'P'
+        };
       } else {
+        console.log(e.detail);
         const newBoard = board.move(e.detail);
         if (moveNumber < moves.length
           && board.move_uci(moves[moveNumber]).fen === newBoard.fen) {
@@ -66,6 +76,7 @@
           nextPuzzle(false);
           board = newBoard;
         }
+        isPromoting = false;
       }
     }
   }
@@ -75,8 +86,13 @@
 
 </script>
 
+
 {#if !hasEnded}
   <div class="grid board">
+    {#if isPromoting}
+      <Promotion {...promoTarget}/>
+    {/if}
+
     {#each board.pieces as piece}
       <Piece {...piece} {flipped} />
     {/each}

@@ -36,8 +36,9 @@ export class CBoard {
   move(m) {
     const from = `${'abcdefgh'[m.from.file]}${m.from.rank + 1}`;
     const to = `${'abcdefgh'[m.to.file]}${m.to.rank + 1}`;
+    const promotion = m.promoPiece || '';
     const newChess = new Chess(this.chess.fen());
-    newChess.move({ from, to });
+    newChess.move({ from, to, promotion });
     return new CBoard(newChess.fen());
   }
 

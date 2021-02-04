@@ -1,4 +1,5 @@
 <script>
+  import { onDestroy } from 'svelte';
   import { CPiece } from './piece.js';
   export let rank = 0;
   export let file = 0;
@@ -10,6 +11,7 @@
 
   let moving = false;
   let squareWidth = 5.5;
+  let hidden = false;
 
   function flip(c) {
     return squareWidth * 8 - c;
@@ -137,13 +139,24 @@
   function between(num, lower, upper) {
     return Math.min(Math.max(num, lower), upper);
   }
+
+  function onHide(e) {
+    if (e.detail.file == file && e.detail.rank == rank) {
+      hidden = e.detail.hide;
+    }
+  }
+
+  addEventListener('hide', onHide);
+  onDestroy(() => removeEventListener('hide', onHide));
 </script>
 
-<div
- on:mousedown={dragMouseDown}
- {id}
- {style}
- class={className}/>
+{#if !hidden}
+  <div
+   on:mousedown={dragMouseDown}
+   {id}
+   {style}
+   class={className}/>
+{/if}
 
 <style>
 .piece {
