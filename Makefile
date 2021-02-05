@@ -18,7 +18,7 @@ format: pyrequirements
 	$(py) -m black server
 	$(py) -m isort server
 
-build:
+build: puzzles client
 	$(py) -m PyInstaller LiRush.spec
 
 client/node_modules: client/package.json
