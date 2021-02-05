@@ -1,8 +1,11 @@
-# import black, isort, fastapi, mypy, pydantic, pytest
+# import aiofiles, black, isort, fastapi, mypy, pydantic, pytest, uvicorn
+aiofiles==0.6.0
 black==19.10b0
 fastapi==0.63.0
 isort==5.2.0
 mypy==0.782
 mypy-extensions==0.4.3
 pydantic==1.7.3
+pyinstaller==4.0
 pytest==6.0.2
+uvicorn==0.13.3

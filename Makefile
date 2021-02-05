@@ -1,6 +1,8 @@
 py = python3
 pip = ${py} -m pip
 
+.PHONY: all puzzles pyrequirements test format build client extimg clean
+
 all: puzzles client
 
 puzzles: data/lichess_db_puzzle.csv
@@ -16,6 +18,9 @@ format: pyrequirements
 	$(py) -m black server
 	$(py) -m isort server
 
+build:
+	$(py) -m PyInstaller LiRush.spec
+
 client/node_modules: client/package.json
 	cd client && npm i
 
@@ -27,6 +32,10 @@ client: client/public/build/.built extimg
 
 extimg:
 	@make -C client/public/extimg -j8
+
+clean:
+	rm -rf build
+	rm -rf dist
 
 data/lichess_db_puzzle.csv:
 	curl -o lichess_db_puzzle.csv.bz2 https://database.lichess.org/lichess_db_puzzle.csv.bz2

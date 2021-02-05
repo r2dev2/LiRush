@@ -1,5 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
+sys.setrecursionlimit(50000)
+
 block_cipher = None
 
 
