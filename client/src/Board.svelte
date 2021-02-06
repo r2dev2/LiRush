@@ -9,11 +9,13 @@
   const columns = [...rows]; 
   let board = new CBoard(fen);
   let moveNumber = 0;
-  if (moves[0]) {
-    board = board.move_uci(moves[0]);
-    moveNumber++;
-  }
-  let flipped = !board.turn;
+  setTimeout(() => {
+    if (moves[0]) {
+      board = board.move_uci(moves[0]);
+      moveNumber++;
+    }
+  }, 100);
+  let flipped = board.turn;
   let hasEnded = false;
   let wasCorrect = false;
   let isPromoting = false;
