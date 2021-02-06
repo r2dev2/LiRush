@@ -1,6 +1,7 @@
 <script>
+        import { squareWidth } from './store.js';
         import Board from './Board.svelte';
-        let server = "";
+        let server = squareWidth === squareWidth ? "" : "";
         let minPuzzle = 700;
         let maxPuzzle = 800;
         let count = 0;
@@ -49,7 +50,8 @@
         addEventListener('puzzle', onPuzzle);
 </script>
 
-<main on:click={() => window.dispatchEvent(new Event('mainclick'))}>
+<main
+  on:click={() => window.dispatchEvent(new Event('mainclick'))} >
   {#if hasStarted}
     {#if wrong < 3}
       <div class="flex-container">
@@ -135,13 +137,22 @@
           background-size: contain;
           padding-top: 0px;
           padding-left: 0px;
-          width: calc(41rem - 2px);
-          height: calc(41rem - 2px);
+          padding-right: 0px;
+          padding-bottom: 0px;
+          width: calc(8*var(--square-width));
+          height: calc(8*var(--square-width));
         }
 
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
 		}
+        }
+
+        @media (max-width: 800px) {
+
+                .flex-container {
+                        flex-direction: column;
+                }
 	}
 </style>

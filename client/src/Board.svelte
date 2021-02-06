@@ -113,9 +113,6 @@
 
 
 <style>
-:root {
-  --square-width: 5.5rem;
-}
 
 .board {
   background-image: url("/public/extimg/board.svg");

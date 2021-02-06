@@ -1,4 +1,5 @@
 <script>
+  import { squareWidth } from './store.js';
   import { onDestroy } from 'svelte';
   import { CPiece } from './piece.js';
   export let rank = 0;
@@ -10,19 +11,19 @@
   $: piece = new CPiece(pieceL);
 
   let moving = false;
-  let squareWidth = 5.5;
   let hidden = false;
 
   function flip(c) {
-    return squareWidth * 8 - c;
+    return $squareWidth * 8 - c;
   }
 
   function initDrag(mouseX, mouseY) {
-    const newX = Math.ceil(mouseX - REMToPx(squareWidth));
-    const newY = Math.ceil(mouseY - REMToPx(squareWidth));
+    const { x, y } = self().getBoundingClientRect();
+    const newX = Math.ceil(mouseX - REMToPx($squareWidth) / 2);
+    const newY = Math.ceil(mouseY - REMToPx($squareWidth) / 2);
     return {
-      dragx: REMToPx(ogFile) - newX - boardX() + 3,
-      dragy: REMToPx(ogRank) - newY - boardY() + 2,
+      dragx: x - newX,
+      dragy: y - newY
     };
   }
 
@@ -57,8 +58,8 @@
   const boardY = () => parent().getBoundingClientRect().top + 2 * scrollY;
   $: dragx = 0 * flipped;
   $: dragy = 0 * flipped;
-  $: ogRank = (flipped ? rank : 7 - rank) * squareWidth;
-  $: ogFile = (flipped ? 7 - file : file) * squareWidth;
+  $: ogRank = (flipped ? rank : 7 - rank) * $squareWidth;
+  $: ogFile = (flipped ? 7 - file : file) * $squareWidth;
   $: dispRank = `calc(${ogRank}rem - ${dragy}px)`;
   $: dispFile = `calc(${ogFile}rem - ${dragx}px)`;
   $: style = translateStyle(dispFile, dispRank, moving) + backgroundStyle;
@@ -73,6 +74,9 @@
     document.onmouseup = closeDragElement;
     document.onmousemove = elementDrag;
     moving = true;
+    // console.log(e);
+    // console.log(e.pageX, e.pageY);
+    // console.log(e.clientX, e.clientY);
     const newPositions = initDrag(e.clientX, e.clientY);
     dragx = newPositions.dragx || dragx;
     dragy = newPositions.dragy || dragy;
@@ -101,7 +105,8 @@
   }
 
   function fontSize() {
-    return getComputedStyle(parent()).getPropertyValue('font-size');
+    return getComputedStyle(document.body).getPropertyValue('font-size');
+    // return getComputedStyle(parent()).getPropertyValue('font-size');
   }
 
   function pxToREM(px) {
@@ -113,12 +118,12 @@
   }
 
   function getFile() {
-    const relativeFile = Math.ceil(pxToREM(pos3 - boardX()) / squareWidth) - 1;
+    const relativeFile = Math.ceil(pxToREM(pos3 - boardX()) / $squareWidth) - 1;
     return flipped ? 7 - relativeFile : relativeFile;
   }
 
   function getRank() {
-    const relativeRank = Math.ceil(pxToREM(pos4 - boardY()) / squareWidth) - 1;
+    const relativeRank = Math.ceil(pxToREM(pos4 - boardY()) / $squareWidth) - 1;
     return flipped ? relativeRank : 7 - relativeRank;
   }
 

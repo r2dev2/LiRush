@@ -1,4 +1,5 @@
 <script>
+  import { squareWidth } from './store.js';
   import { onDestroy } from 'svelte';
   import { CPiece } from './piece.js';
 
@@ -6,8 +7,6 @@
   export let rank = 0;
   export let color = true;
   export let move = null;
-
-  let squareWidth = 5.5;
 
   $: rrank = rank;
 
@@ -28,8 +27,8 @@
   let renderTargets = [];
 
   function translate({ file, rank }) {
-    const r = (flipped ? rank : (7 - rank)) * squareWidth;
-    const f = (flipped ? (7 - file) : file) * squareWidth;
+    const r = (flipped ? rank : (7 - rank)) * $squareWidth;
+    const f = (flipped ? (7 - file) : file) * $squareWidth;
     return `transform: translate(${f}rem, ${r}rem);`;
   }
 
