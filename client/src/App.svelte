@@ -1,11 +1,13 @@
 <script>
         import { squareWidth } from './store.js';
         import Board from './Board.svelte';
+        import Timer from './Timer.svelte';
         let server = squareWidth === squareWidth ? "" : "";
         let minPuzzle = 700;
         let maxPuzzle = 800;
         let count = 0;
         let wrong = 0;
+        let timesUp = false;
         let hasStarted = false;
 
         async function getPuzzle(minPuzzle, maxPuzzle) {
@@ -31,6 +33,7 @@
           count = 0;
           wrong = 0;
           hasStarted = true;
+          timesUp = false;
         }
 
         function onPuzzle(e) {
@@ -46,29 +49,39 @@
           }
         }
 
+        function onTimeup() {
+          console.log("received times up");
+          timesUp = true;
+        }
+
         removeEventListener('puzzle', onPuzzle);
         addEventListener('puzzle', onPuzzle);
+        removeEventListener('timeup', onTimeup);
+        addEventListener('timeup', onTimeup);
 </script>
 
 <main
   on:click={() => window.dispatchEvent(new Event('mainclick'))} >
   {#if hasStarted}
-    {#if wrong < 3}
+    {#if wrong < 3 && !timesUp}
       <div class="flex-container">
         <div class="board-container">
           {#await getPuzzle(minPuzzle, maxPuzzle) then { fen, moves }}
             <Board {fen} {moves} />
           {/await}
         </div>
-        <div class="correct-description">
-          <span class="correct">
-            {count}
-          </span>
-          correct and
-          <span class="incorrect">
-            {wrong}
-          </span>
-          incorrect
+        <div class="info">
+          <div class="correct-description">
+            <span class="correct">
+              {count}
+            </span>
+            correct and
+            <span class="incorrect">
+              {wrong}
+            </span>
+            incorrect
+          </div>
+          <Timer />
         </div>
       </div>
     {:else}
