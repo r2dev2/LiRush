@@ -1,7 +1,7 @@
 py = python3
 pip = ${py} -m pip
 
-.PHONY: all puzzles pyrequirements test format build client extimg clean
+.PHONY: all puzzles pyrequirements test format build client extimg clean deb
 
 all: puzzles client
 
@@ -17,6 +17,14 @@ test: pyrequirements
 format: pyrequirements
 	$(py) -m black server
 	$(py) -m isort server
+
+deb: build
+	rm -rf linuxconfig/usr/bin
+	mkdir -p linuxconfig/usr
+	cp -r dist/LiRush linuxconfig/usr/bin
+	mv linuxconfig/usr/bin/LiRush linuxconfig/usr/bin/lirush
+	dpkg-deb --build linuxconfig
+	mv linuxconfig.deb dist/lirush-0.2.0_amd64.deb
 
 build: puzzles client
 	$(py) -m PyInstaller LiRush.spec

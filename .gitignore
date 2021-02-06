@@ -10,3 +10,4 @@ client/public/extimg/white/*.png
 client/public/extimg/black/*.png
 client/public/extimg/*.svg
 dist/
+linuxconfig/usr/
