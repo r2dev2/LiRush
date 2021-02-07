@@ -26,7 +26,7 @@ deb: build
 	dpkg-deb --build linuxconfig
 	mv linuxconfig.deb dist/lirush-0.2.0_amd64.deb
 
-build: puzzles client
+build: puzzles client pyrequirements
 	$(py) -m PyInstaller LiRush.spec
 
 client/node_modules: client/package.json
